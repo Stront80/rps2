@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Камень, ножницы, бумага</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: #f0f4f8;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 { margin-bottom: 5px; }
+    .score-board {
+      background: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .score-text { font-size: 1.2rem; font-weight: 600; }
+    .choices { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    button {
+      padding: 18px 28px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.2s;
+      background: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    button:active { transform: scale(0.96); }
+    button:hover { box-shadow: 0 6px 14px rgba(0,0,0,0.12); }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      min-height: 24px;
+    }
+    .win { color: #2e7d32; }
+    .lose { color: #c62828; }
+    .tie { color: #1565c0; }
+  </style>
+</head>
+<body>
+  <h1>🪨 Ножницы ✂️ Бумага 📄</h1>
+
+  <div class="score-board">
+    <div class="score-text">Ты: <span id="user-score">0</span> — Компьютер: <span id="computer-score">0</span></div>
+  </div>
+
+  <div class="choices">
+    <button onclick="play('камень')">🪨 Камень</button>
+    <button onclick="play('ножницы')">✂️ Ножницы</button>
+    <button onclick="play('бумага')">📄 Бумага</button>
+  </div>
+
+  <div id="result"></div>
+
+  <script>
+    const userScoreEl = document.getElementById('user-score');
+    const computerScoreEl = document.getElementById('computer-score');
+    const resultEl = document.getElementById('result');
+
+    let userScore = 0;
+    let computerScore = 0;
+
+    function getComputerChoice() {
+      const choices = ['камень', 'ножницы', 'бумага'];
+      return choices[Math.floor(Math.random() * choices.length)];
+    }
+
+    function determineWinner(user, computer) {
+      if (user === computer) return 'ничья';
+      if (
+        (user === 'камень' && computer === 'ножницы') ||
+        (user === 'ножницы' && computer === 'бумага') ||
+        (user === 'бумага' && computer === 'камень')
+      ) {
+        return 'победа';
+      }
+      return 'поражение';
+    }
+
+    function play(userChoice) {
+      const computerChoice = getComputerChoice();
+      const result = determineWinner(userChoice, computerChoice);
+
+      let message = `Ты: ${userChoice} vs Компьютер: ${computerChoice} — `;
+      if (result === 'ничья') {
+        message += '🤝 Ничья!';
+        resultEl.className = 'tie';
+      } else if (result === 'победа') {
+        message += '🎉 Победа!';
+        userScore++;
+        resultEl.className = 'win';
+      } else {
+        message += '😕 Компьютер победил!';
+        computerScore++;
+        resultEl.className = 'lose';
+      }
+
+      userScoreEl.textContent = userScore;
+      computerScoreEl.textContent = computerScore;
+      resultEl.textContent = message;
+    }
+  </script>
+</body>
+</html>
